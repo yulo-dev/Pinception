@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinception Assistant</title>
+  <style>
+    :root {
+      --color-pin-bg: #F9F4EB;
+      --color-ui-bg: #F5F2EC;
+      --color-text-main: #333;
+      --color-coffee: #4f3c36;
+      --color-coffee-light: #8D6E63;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--color-pin-bg) 0%, var(--color-ui-bg) 100%);
+      color: var(--color-text-main);
+      overflow: hidden;
+    }
+
+    .popup-container {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-logo img {
+      border-radius: 8px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-coffee);
+      letter-spacing: -0.5px;
+    }
+
+    .description {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-coffee);
+      margin-bottom: 8px;
+    }
+
+    .features {
+      font-size: 12px;
+      color: var(--color-coffee);
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .features div {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .features div::before {
+      content: '•';
+      color: var(--color-coffee);
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .stats-container {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(107, 82, 73, 0.1);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .stat-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--color-coffee-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-coffee);
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--color-coffee);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5a453f;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--color-coffee-light);
+      border: 1px solid rgba(107, 82, 73, 0.2);
+    }
+    .btn-secondary:hover {
+      background: var(--color-ui-bg);
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(107, 82, 73, 0.1);
+      margin: 4px 0;
+    }
+
+    /* --- Custom Confirmation Dialog Styles --- */
+    .pinception-hidden {
+      display: none !important;
+    }
+
+    #custom-confirm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(40, 30, 25, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    #custom-confirm-overlay.show {
+      opacity: 1;
+    }
+
+    #custom-confirm-dialog {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 260px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(107, 82, 73, 0.1);
+      text-align: center;
+      transform: scale(0.95);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    #custom-confirm-overlay.show #custom-confirm-dialog {
+      transform: scale(1);
+    }
+
+    .dialog-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-coffee);
+      margin-bottom: 8px;
+    }
+
+    .dialog-message {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-coffee-light);
+      margin-bottom: 20px;
+    }
+
+    .dialog-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pinception-btn-danger {
+      background-color: var(--color-coffee);
+      color: white;
+    }
+    .pinception-btn-danger:hover {
+      background-color: #5a453f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup-container">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <img src="icons/icon2_128.png" alt="Pinception Logo" width="32" height="32" />
+      </div>
+      <div class="brand-name">Pinception</div>
+    </div>
+
+    <div class="description">
+      <div class="tagline">Stay in control of your AI memory</div>
+      <div class="features">
+        <div>Pin any ChatGPT message instantly</div>
+        <div>Save and reuse your favorite prompts</div>
+        <div>See pinned content even across chats</div>
+        <div>Instant toast shows pin location</div>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-label">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/></svg>
+          Pinned Messages
+        </div>
+        <div class="stat-value" id="pinnedCount">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M9 21C9 21.5523 9.44772 22 10 22H14C14.5523 22 15 21.5523 15 21V20H9V21Z"/><path d="M12 2C8.13401 2 5 5.13401 5 9C5 10.8906 5.89543 12.5634 7.25 13.6056V17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17V13.6056C18.1046 12.5634 19 10.8906 19 9C19 5.13401 15.866 2 12 2Z"/><path d="M12 6V10"/><path d="M10 8H14"/></svg>
+          Quick Prompts
+        </div>
+        <div class="stat-value" id="promptCount">0</div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" id="openChatGPT">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="m9 18 6-6-6-6"/></svg>
+        Open ChatGPT
+      </button>
+      <div class="divider"></div>
+      <button class="btn btn-secondary" id="clearAllData">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Reset to Default
+      </button>
+    </div>
+  </div>
+
+  <div id="custom-confirm-overlay" class="pinception-hidden">
+    <div id="custom-confirm-dialog">
+      <h3 class="dialog-title">Reset to Default?</h3>
+      <p class="dialog-message">
+        This will delete all pinned messages and custom prompts.<br>
+        Default prompts will be restored.<br>
+        This action cannot be undone.
+      </p>
+      <div class="dialog-buttons">
+        <button id="confirm-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="confirm-ok-btn" class="btn pinception-btn-danger">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

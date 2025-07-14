@@ -1,0 +1,19 @@
+# macOS system files
+.DS_Store
+__MACOSX/
+# Optional future build tools
+node_modules/
+dist/
+build/
+# IDE/editor config folders
+.vscode/
+.idea/
+# Compressed archives or demo zips
+*.psd
+*.sketch
+*.fig
+*.xcf
+*.zip
+# Local secrets or env config (if any in future)
+*.env
+.env.*

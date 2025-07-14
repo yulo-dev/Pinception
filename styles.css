@@ -1,0 +1,561 @@
+:root {
+  --color-pin-bg: #F9F4EB;
+  --color-ui-bg: #F5F2EC;
+  --color-text-main: #333;
+}
+
+/* --- Floating Buttons --- */
+.floating-btn {
+  position: fixed;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.floating-btn:hover {
+  transform: scale(1.1);
+}
+.pin-btn {
+  bottom: 20px;
+  right: 20px;
+  background: var(--color-pin-bg);
+}
+.prompt-btn {
+  bottom: 80px;
+  right: 20px;
+  background: var(--color-ui-bg);
+}
+
+/* --- General Popups --- */
+.prompt-popup,
+.pin-popup {
+  position: fixed;
+  width: 320px;
+  max-height: 450px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  z-index: 1001;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  visibility: hidden;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.pin-popup {
+  bottom: 20px;
+  right: 80px;
+}
+.prompt-popup {
+  bottom: 80px;
+  right: 80px;
+}
+
+/* --- Prompt Popup: Search Bar --- */
+.prompt-search-container {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
+}
+.prompt-search-container::before {
+  content: '🔍';
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #888;
+  z-index: 1;
+}
+.prompt-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 13px;
+  outline: none;
+}
+.prompt-search-input:focus {
+  border-color: #382e19;
+  box-shadow: 0 0 0 2px rgba(56, 46, 25, 0.1);
+}
+
+/* --- Prompt Popup: Content & Items --- */
+.prompt-content-container {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.category-header-simple {
+  background: #f5f5f5;
+  color: #666;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e0e0e0;
+}
+.favorite-header {
+  background: var(--color-pin-bg);
+  color: #6b5249;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prompt-item-container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-ui-bg);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+.prompt-item-container:hover {
+  background-color: #f8f9fa;
+}
+.prompt-item-simple {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-main);
+}
+.prompt-item-container.prompt-selected {
+  animation: promptSelected 1s ease-out;
+}
+@keyframes promptSelected {
+  0% { background-color: #f7ead0; }
+  100% { background-color: transparent; }
+}
+
+/* --- Prompt Popup: Menu --- */
+.prompt-menu-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  border-radius: 6px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+.prompt-item-container:hover .prompt-menu-btn {
+  background-color: #e9e9e9;
+}
+.prompt-menu-dropdown {
+  position: fixed;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1002;
+  width: max-content;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.menu-option {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu-option svg {
+    flex-shrink: 0;
+}
+.menu-option:hover {
+  background-color: #f5f5f5;
+}
+.menu-option-delete:hover, .menu-option-delete:hover svg {
+  color: #f44336;
+  stroke: #f44336;
+}
+
+.prompt-add-btn {
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: center;
+  color: #6b5249;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 12px;
+  cursor: pointer;
+  border-top: 1px solid var(--color-ui-bg);
+  margin-top: 0;
+}
+.prompt-add-btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* --- NEW Pin Popup Design --- */
+.pin-item-new {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+.pin-item-new:hover {
+  background-color: #f8f9fa;
+}
+.pin-item-new:last-child {
+  border-bottom: none;
+}
+
+.pin-text-new {
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  color: #333;
+  cursor: pointer;
+}
+.pin-text-new:hover {
+  color: #6b5249;
+}
+
+.clamp-4 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+
+.pin-meta-row-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pin-left-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pin-tag-new {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f8f9fa;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  font-size: 11px;
+  color: #6b5249;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pin-tag-new svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.pin-timestamp-new {
+  font-size: 11px;
+  color: #999;
+  white-space: nowrap;
+}
+
+.pin-actions-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pin-find-btn-new {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 11px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+.pin-find-btn-new:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.pin-delete-btn-new {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.pin-delete-btn-new:hover {
+  background: #ffebee;
+  border-color: #f44336;
+}
+.pin-delete-btn-new:hover svg {
+  stroke: #f44336;
+}
+
+/* --- Legacy Pin Popup (kept for fallback) --- */
+.pin-item-simple {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-ui-bg);
+}
+.pin-item-simple:last-child {
+  border-bottom: none;
+}
+.pin-text {
+  font-size: 13px;
+  color: var(--color-text-main);
+  margin-bottom: 6px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+.pin-meta {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+}
+.pin-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.pin-action-btn {
+  background: #e9e9e9;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.pin-action-btn:hover {
+  background-color: #dcdcdc;
+}
+.pin-action-btn.delete {
+  background: none;
+  color: #a9a9a9;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0 8px;
+  line-height: 1;
+}
+.pin-action-btn.delete:hover {
+  color: #f44336;
+  background-color: #ffebee;
+}
+
+/* --- Pinning UI on Main Page --- */
+.pin-button {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  border: 1px solid #b0b0b0;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+.pin-button:hover {
+  transform: scale(1.1);
+  border-color: #333;
+}
+.pin-button.bg-pin-yellow {
+  background-color: var(--color-pin-bg);
+  border-color: #e0cda1;
+}
+.pin-button.bg-white {
+  background-color: white;
+}
+.highlight-effect {
+  background-color: var(--color-pin-bg);
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  transition: all 0.5s ease-in-out;
+}
+
+/* --- Utilities --- */
+.empty-message {
+  padding: 24px 12px;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
+.notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  padding: 12px 16px 12px 44px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 10000;
+  max-width: 300px;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  background-color: #F5F5F5;
+  color: var(--color-text-main);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.notification-success::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 12L11 14L15 10' stroke='%2357C4A5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='12' r='9' stroke='%2357C4A5' stroke-width='2'/%3E%3C/svg%3E");
+}
+.notification-error::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 6L6 18M6 6L18 18' stroke='%23F87171' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='9' stroke='%23F87171' stroke-width='2'/%3E%3C/svg%3E");
+}
+.notification-info::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 8V12M12 16H12.01' stroke='%2360A5FA' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='9' stroke='%2360A5FA' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+/* --- Custom Scrollbar Style --- */
+.prompt-popup::-webkit-scrollbar,
+.pin-popup::-webkit-scrollbar,
+.prompt-content-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.prompt-popup::-webkit-scrollbar-track,
+.pin-popup::-webkit-scrollbar-track,
+.prompt-content-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.prompt-popup::-webkit-scrollbar-thumb,
+.pin-popup::-webkit-scrollbar-thumb,
+.prompt-content-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.prompt-popup::-webkit-scrollbar-thumb:hover,
+.pin-popup::-webkit-scrollbar-thumb:hover,
+.prompt-content-container::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* --- Custom Confirmation Dialog Styles --- */
+.pinception-hidden {
+  display: none !important;
+}
+
+#custom-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(40, 30, 25, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#custom-confirm-overlay.show {
+  opacity: 1;
+}
+
+#custom-confirm-dialog {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 260px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(107, 82, 73, 0.1);
+  text-align: center;
+  transform: scale(0.95);
+  transition: transform 0.2s ease-in-out;
+}
+
+#custom-confirm-overlay.show #custom-confirm-dialog {
+  transform: scale(1);
+}
+
+.dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-coffee);
+  margin-bottom: 8px;
+}
+
+.dialog-message {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-coffee-light);
+  margin-bottom: 20px;
+}
+
+.dialog-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pinception-btn-danger {
+  background-color: var(--color-coffee);
+  color: white;
+}
+.pinception-btn-danger:hover {
+  background-color: #5a453f;
+}
