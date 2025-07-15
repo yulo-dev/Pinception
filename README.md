@@ -53,8 +53,8 @@ Open the full HTML prompt manager (in the extension popup) and click **“Reset 
 | Minimal UI | Pin Panel | Prompt Panel |
 |------------|-----------|--------------|
 | ![](screenshots/screenshot1.png) | ![](screenshots/screenshot3.png) | ![](screenshots/screenshot4.png) |
-&nbsp;
 
+&nbsp;
 ## 📦 Install
 
 🔗 **[Get it on the Chrome Web Store](https://chromewebstore.google.com/detail/pinception/gegkjocbamflconbpcepdipelhlemdmj?authuser=0&hl=zh-TW)**
