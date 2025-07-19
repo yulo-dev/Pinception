@@ -369,12 +369,29 @@
   }
 
   function insertPrompt(text) {
+    // More precise selectors to target the actual chat input box
     const selectors = [
+      // Highest priority: ChatGPT main input box specific selectors
       'textarea[data-id="root"]',
       'textarea[placeholder*="Message"]',
       'textarea[placeholder*="message"]',
-      'div[contenteditable="true"]',
-      'textarea'
+      'div[data-id="root"][contenteditable="true"]',
+
+      // Next priority: Look specifically for the message input area at the bottom
+      '[data-testid*="composer"] textarea',
+      '[data-testid*="input"] textarea',
+      'form[class*="composer"] textarea',
+      'div[class*="composer"] textarea',
+
+      // Look for input elements in the bottom area of the page
+      'main textarea:not([readonly]):not([disabled])',
+      'form textarea:not([readonly]):not([disabled])',
+
+      // Exclude code editors, notebooks, and other content editable areas
+      'main div[contenteditable="true"]:not([data-slate-editor]):not(.notebook-content):not([class*="editor"]):not([class*="code"])',
+
+      // Last resort
+      'textarea:not([readonly]):not([disabled])'
     ];
 
     let foundElement = null;
@@ -382,13 +399,48 @@
     for (const selector of selectors) {
       const elements = document.querySelectorAll(selector);
       for (const el of elements) {
+        // Check if element is visible and operable
         const rect = el.getBoundingClientRect();
-        if (rect.width > 100 && rect.height > 20 && !el.disabled && !el.readOnly) {
-          foundElement = el;
-          break;
+        const computedStyle = window.getComputedStyle(el);
+
+        // Ensure element is visible, not hidden, and has sufficient size
+        if (rect.width > 100 &&
+            rect.height > 20 &&
+            !el.disabled &&
+            !el.readOnly &&
+            computedStyle.display !== 'none' &&
+            computedStyle.visibility !== 'hidden') {
+
+          // Additional check: exclude obvious notebook/code editor elements
+          const isNotTargetElement = el.closest('[class*="notebook"]') ||
+                        el.closest('[class*="canvas"]') ||
+                        el.closest('[class*="editor"]') ||
+                        el.closest('[class*="code"]') ||
+                        el.closest('[data-testid*="notebook"]') ||
+                        el.closest('aside') || // sidebar
+                        el.getAttribute('aria-label')?.includes('notebook') ||
+                        el.getAttribute('aria-label')?.includes('canvas') ||
+                        el.getAttribute('aria-label')?.includes('editor') ||
+                        el.getAttribute('aria-label')?.includes('code');
+
+          // Prefer elements closer to the bottom of the page (where chat input usually is)
+          const isInBottomHalf = rect.top > window.innerHeight / 2;
+
+          // Ensure it's in main conversation area
+          const isInMainArea = el.closest('main') || el.closest('form') || el.closest('[role="main"]');
+
+          if (!isNotTargetElement && isInMainArea) {
+            // If we find an element in the bottom half, prioritize it
+            if (isInBottomHalf || !foundElement) {
+              foundElement = el;
+              if (isInBottomHalf) break; // Stop searching if we found a bottom element
+            }
+          }
         }
       }
-      if (foundElement) break;
+      if (foundElement && foundElement.getBoundingClientRect().top > window.innerHeight / 2) {
+        break; // Stop if we found a good element in the bottom half
+      }
     }
 
     if (foundElement) {
@@ -416,15 +468,18 @@
           nativeTextareaSetter.call(foundElement, newValue);
 
           foundElement.setSelectionRange(newValue.length, newValue.length);
-
           foundElement.dispatchEvent(new Event('input', { bubbles: true }));
         }
 
+        // Add debug information
+        console.log('Pinception: Prompt inserted into:', foundElement.tagName, foundElement.className);
         showNotification('Prompt inserted successfully', 'success');
       } catch (error) {
+        console.error('Pinception insertion error:', error);
         showNotification('Insertion failed: ' + error.message, 'error');
       }
     } else {
+      console.log('Pinception: No suitable input field found');
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
           showNotification('Input field not found. Copied to clipboard', 'error');
