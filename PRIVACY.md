@@ -1,7 +1,7 @@
 # Privacy Policy for Pinception
 
 **Effective Date: July 13, 2025**
-
+ 
 Pinception is a Chrome extension that allows users to pin and organize ChatGPT messages and personal prompts. The extension is designed to operate entirely within the user's browser and does not collect, store, or transmit any personal information.
 
 ## What data do we collect?
