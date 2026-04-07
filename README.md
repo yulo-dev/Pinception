@@ -4,7 +4,7 @@
 
 No more endless scrolling. No more retyping the same prompt. No more losing great answers in long threads.
 &nbsp;
-
+ 
 ## 💡 Why Pinception?
 
 ChatGPT is powerful, but it wasn't built for memory. Once a message scrolls out of view — it's basically gone.
